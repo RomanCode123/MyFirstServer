@@ -1,11 +1,30 @@
 var express = require('express');
 var app = express();
+var VirtualMassiv = [{ "name": "CAt", "password": "123" }, { "name": "cat", "password": "321" }, { "name": "aaa", "password": "12345" }]
 var serv = require('http').Server(app);
+var body = require("body-parser");
+const parser = body.urlencoded({ extended: false });
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/client/index.html');
+    res.sendFile(__dirname + '/client/Registrate.html');
 });
 app.use('/client', express.static(__dirname + '/client'));
+app.post('/', parser, function(req, res) {
+    var flag = true;
+
+    for (let i = 0; i < VirtualMassiv.length; i++) {
+        if ((VirtualMassiv[i].name == req.body.Name) && (VirtualMassiv[i].password == req.body.Pas)) {
+            flag = false;
+            res.sendFile(__dirname + '/client/index.html');
+        }
+    }
+    if (flag) {
+        res.send("This user dont exist");
+
+    }
+
+
+})
 
 serv.listen(2000);
 console.log("Server started.");
